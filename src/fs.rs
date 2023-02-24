@@ -334,12 +334,6 @@ impl<T: Read + Write + Seek> IntoStorage<T> for T {
     }
 }
 
-#[cfg(feature = "std")]
-impl<T: std::io::Read + std::io::Write + std::io::Seek> IntoStorage<io::StdIoWrapper<T>> for T {
-    fn into_storage(self) -> io::StdIoWrapper<Self> {
-        io::StdIoWrapper::new(self)
-    }
-}
 
 impl<IO: Read + Write + Seek, TP, OCC> FileSystem<IO, TP, OCC> {
     /// Creates a new filesystem object instance.

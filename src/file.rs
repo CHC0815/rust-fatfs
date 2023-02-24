@@ -311,15 +311,6 @@ impl<IO: ReadWriteSeek, TP: TimeProvider, OCC> Read for File<'_, IO, TP, OCC> {
     }
 }
 
-#[cfg(feature = "std")]
-impl<IO: ReadWriteSeek, TP: TimeProvider, OCC> std::io::Read for File<'_, IO, TP, OCC>
-where
-    std::io::Error: From<Error<IO::Error>>,
-{
-    fn read(&mut self, buf: &mut [u8]) -> std::io::Result<usize> {
-        Ok(Read::read(self, buf)?)
-    }
-}
 
 impl<IO: ReadWriteSeek, TP: TimeProvider, OCC> Write for File<'_, IO, TP, OCC> {
     fn write(&mut self, buf: &[u8]) -> Result<usize, Self::Error> {
@@ -390,23 +381,6 @@ impl<IO: ReadWriteSeek, TP: TimeProvider, OCC> Write for File<'_, IO, TP, OCC> {
     }
 }
 
-#[cfg(feature = "std")]
-impl<IO: ReadWriteSeek, TP: TimeProvider, OCC> std::io::Write for File<'_, IO, TP, OCC>
-where
-    std::io::Error: From<Error<IO::Error>>,
-{
-    fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
-        Ok(Write::write(self, buf)?)
-    }
-
-    fn write_all(&mut self, buf: &[u8]) -> std::io::Result<()> {
-        Ok(Write::write_all(self, buf)?)
-    }
-
-    fn flush(&mut self) -> std::io::Result<()> {
-        Ok(Write::flush(self)?)
-    }
-}
 
 impl<IO: ReadWriteSeek, TP, OCC> Seek for File<'_, IO, TP, OCC> {
     fn seek(&mut self, pos: SeekFrom) -> Result<u64, Self::Error> {
@@ -470,15 +444,5 @@ impl<IO: ReadWriteSeek, TP, OCC> Seek for File<'_, IO, TP, OCC> {
         self.offset = new_offset;
         self.current_cluster = new_cluster;
         Ok(u64::from(self.offset))
-    }
-}
-
-#[cfg(feature = "std")]
-impl<IO: ReadWriteSeek, TP: TimeProvider, OCC> std::io::Seek for File<'_, IO, TP, OCC>
-where
-    std::io::Error: From<Error<IO::Error>>,
-{
-    fn seek(&mut self, pos: std::io::SeekFrom) -> std::io::Result<u64> {
-        Ok(Seek::seek(self, pos.into())?)
     }
 }
