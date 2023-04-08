@@ -142,6 +142,7 @@ impl FsInfoSector {
         let lead_sig = rdr.read_u32_le()?;
         if lead_sig != Self::LEAD_SIG {
             error!("invalid lead_sig in FsInfo sector: {}", lead_sig);
+            println!("invalid lead_sig in FsInfo sector: {}", lead_sig);
             return Err(Error::CorruptedFileSystem);
         }
         let mut reserved = [0_u8; 480];
@@ -149,6 +150,7 @@ impl FsInfoSector {
         let struc_sig = rdr.read_u32_le()?;
         if struc_sig != Self::STRUC_SIG {
             error!("invalid struc_sig in FsInfo sector: {}", struc_sig);
+            println!("invalid struc_sig in FsInfo sector: {}", struc_sig);
             return Err(Error::CorruptedFileSystem);
         }
         let free_cluster_count = match rdr.read_u32_le()? {
@@ -170,6 +172,7 @@ impl FsInfoSector {
         let trail_sig = rdr.read_u32_le()?;
         if trail_sig != Self::TRAIL_SIG {
             error!("invalid trail_sig in FsInfo sector: {}", trail_sig);
+            println!("invalid trail_sig in FsInfo sector: {}", trail_sig);
             return Err(Error::CorruptedFileSystem);
         }
         Ok(Self {
